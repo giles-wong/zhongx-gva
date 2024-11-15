@@ -1,9 +1,7 @@
 package business
 
-import "github.com/giles-wong/zhongx-gva/server/global"
-
 type CertReading struct {
-	global.GVA_MODEL
+	ID       uint   `json:"ID" gorm:"primarykey"`
 	Name     string `json:"name" gorm:"comment:姓名"`
 	Number   string `json:"number" gorm:"index;comment:证书编号"`
 	IdCard   string `json:"idCard" gorm:"comment:身份证号"`

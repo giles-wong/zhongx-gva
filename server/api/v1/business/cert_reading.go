@@ -1,6 +1,7 @@
 package business
 
 import (
+	"fmt"
 	"github.com/giles-wong/zhongx-gva/server/global"
 	"github.com/giles-wong/zhongx-gva/server/model/business"
 	businessReq "github.com/giles-wong/zhongx-gva/server/model/business/request"
@@ -87,6 +88,7 @@ func (cr *CertReadingApi) EditReading(c *gin.Context) {
 	}
 
 	reading := &business.CertReading{
+		ID:       r.ID,
 		Number:   r.Number,
 		Name:     r.Name,
 		IdCard:   r.IdCard,
@@ -98,6 +100,9 @@ func (cr *CertReadingApi) EditReading(c *gin.Context) {
 		File:     r.File,
 		Group:    r.Group,
 	}
+
+	fmt.Println(reading)
+
 	err = readingService.EditReading(*reading)
 	if err != nil {
 		global.GVA_LOG.Error("更新失败!", zap.Error(err))

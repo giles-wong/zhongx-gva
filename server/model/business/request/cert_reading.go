@@ -24,7 +24,7 @@ type AddReading struct {
 }
 
 type EditReading struct {
-	ID       string `json:"id" form:"id"`
+	ID       uint   `json:"ID" form:"ID"`
 	Name     string `json:"name" form:"name"`
 	Number   string `json:"number" form:"number"`
 	Mobile   string `json:"mobile" form:"mobile"`

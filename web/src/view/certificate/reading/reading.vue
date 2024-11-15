@@ -185,18 +185,16 @@
         label-width="80px"
     >
       <el-form-item
-          v-if="dialogFlag === 'add'"
           label="姓名"
           prop="name"
       >
-        <el-input v-model="readingInfo.name" />
+        <el-input v-model="readingInfo.name" :disabled="dialogFlag === 'edit'" />
       </el-form-item>
       <el-form-item
-          v-if="dialogFlag === 'add'"
           label="证书编号"
           prop="number"
       >
-        <el-input v-model="readingInfo.number" />
+        <el-input v-model="readingInfo.number" :disabled="dialogFlag === 'edit'" />
       </el-form-item>
       <el-form-item
           label="手机号"
@@ -208,7 +206,7 @@
           label="身份证号"
           prop="idCard"
       >
-        <el-input v-model="readingInfo.idCard" />
+        <el-input v-model="readingInfo.idCard" :disabled="dialogFlag === 'edit'" />
       </el-form-item>
       <el-form-item
           label="所属组"
@@ -370,7 +368,7 @@ const rules = ref({
     { min: 6, message: '最低6位字符', trigger: 'blur' }
   ],
   mobile: [
-    { required: true, pattern: /^1([38][0-9]|4[014-9]|[59][0-35-9]|6[2567]|7[0-8])\d{8}$/, message: '请输入用户昵称', trigger: 'blur' }
+    { required: true, pattern: /^1([38][0-9]|4[014-9]|[59][0-35-9]|6[2567]|7[0-8])\d{8}$/, message: '请输入正确的手机号', trigger: 'blur' }
   ],
   idCard: [
     { required: true, message: '请输入身份证号', trigger: 'blur' },
