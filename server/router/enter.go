@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/giles-wong/zhongx-gva/server/router/business"
 	"github.com/giles-wong/zhongx-gva/server/router/example"
 	"github.com/giles-wong/zhongx-gva/server/router/system"
 )
@@ -8,6 +9,7 @@ import (
 var RouterGroupApp = new(RouterGroup)
 
 type RouterGroup struct {
-	System  system.RouterGroup
-	Example example.RouterGroup
+	System   system.RouterGroup
+	Example  example.RouterGroup
+	Business business.RouterGroup
 }

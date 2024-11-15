@@ -19,8 +19,7 @@ import 'default-passive-events'
 const app = createApp(App)
 app.config.productionTip = false
 
-app
-    .use(run)
+app.use(run)
     .use(ElementPlus)
     .use(store)
     .use(auth)

@@ -109,5 +109,6 @@ export const getUrl = (url) => {
 export const isVideoExt = (url) => url.endsWith('.mp4') || url.endsWith('.mov') || url.endsWith('.webm') || url.endsWith('.ogg');
 
 export const isVideoMime = (type) => type == 'video/mp4' || type == 'video/webm' || type == 'video/ogg';
+export const isFileMime = (type) => type == 'application/pdf' || type == 'text/csv';
 
 export const isImageMime = (type) => type == 'image/jpeg' || type == 'image/png' || type == 'image/webp' || type == 'image/svg+xml';
