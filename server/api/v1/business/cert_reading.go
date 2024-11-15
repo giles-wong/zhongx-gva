@@ -1,14 +1,15 @@
 package business
 
 import (
+	"encoding/json"
 	"github.com/giles-wong/zhongx-gva/server/global"
 	"github.com/giles-wong/zhongx-gva/server/model/business"
 	businessReq "github.com/giles-wong/zhongx-gva/server/model/business/request"
-	businessRes "github.com/giles-wong/zhongx-gva/server/model/business/response"
 	"github.com/giles-wong/zhongx-gva/server/model/common/response"
 	"github.com/giles-wong/zhongx-gva/server/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"log"
 )
 
 type CertReadingApi struct {
@@ -41,6 +42,7 @@ func (cr *CertReadingApi) GetReadingList(ctx *gin.Context) {
 		response.FailWithMessage("获取失败", ctx)
 		return
 	}
+
 	response.OkWithDetailed(response.PageResult{
 		List:     list,
 		Total:    total,
@@ -56,6 +58,11 @@ func (cr *CertReadingApi) AddReading(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+	// 将文件数组转换为 JSON
+	fileJSON, err := json.Marshal(r.File)
+	if err != nil {
+		log.Fatalf("Error marshaling file data: %v", err)
+	}
 
 	reading := &business.CertReading{
 		Number:   r.Number,
@@ -66,16 +73,16 @@ func (cr *CertReadingApi) AddReading(c *gin.Context) {
 		Referrer: r.Referrer,
 		Remark:   r.Remark,
 		Status:   r.Status,
-		File:     r.File,
+		File:     string(fileJSON),
 		Group:    r.Group,
 	}
-	readingReturn, err := readingService.AddReading(*reading)
+	_, err = readingService.AddReading(*reading)
 	if err != nil {
 		global.GVA_LOG.Error("添加失败!", zap.Error(err))
-		response.FailWithDetailed(businessRes.ReadingResponse{Reading: readingReturn}, "添加失败", c)
+		response.FailWithDetailed(r, "添加失败", c)
 		return
 	}
-	response.OkWithDetailed(businessRes.ReadingResponse{Reading: readingReturn}, "添加成功", c)
+	response.OkWithDetailed(r, "添加成功", c)
 }
 
 func (cr *CertReadingApi) EditReading(c *gin.Context) {
@@ -85,7 +92,11 @@ func (cr *CertReadingApi) EditReading(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-
+	// 将文件数组转换为 JSON
+	fileJSON, err := json.Marshal(r.File)
+	if err != nil {
+		log.Fatalf("Error marshaling file data: %v", err)
+	}
 	reading := &business.CertReading{
 		ID:       r.ID,
 		Number:   r.Number,
@@ -96,7 +107,7 @@ func (cr *CertReadingApi) EditReading(c *gin.Context) {
 		Referrer: r.Referrer,
 		Remark:   r.Remark,
 		Status:   r.Status,
-		File:     r.File,
+		File:     string(fileJSON),
 		Group:    r.Group,
 	}
 

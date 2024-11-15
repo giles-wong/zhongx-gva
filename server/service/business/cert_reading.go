@@ -1,10 +1,12 @@
 package business
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/giles-wong/zhongx-gva/server/global"
 	"github.com/giles-wong/zhongx-gva/server/model/business"
 	businessReq "github.com/giles-wong/zhongx-gva/server/model/business/request"
+	businessRes "github.com/giles-wong/zhongx-gva/server/model/business/response"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"strconv"
@@ -19,6 +21,8 @@ func (readingService *ReadingService) GetReadingList(info businessReq.GetReading
 	offset := info.PageSize * (info.Page - 1)
 	db := global.GVA_DB.Model(&business.CertReading{})
 	var readingList []business.CertReading
+	var readingResList []businessRes.ReadingResponse
+
 	//db = db.Where("is_deleted = ?", 0)
 	if info.Name != "" {
 		db = db.Where("name LIKE ?", "%"+info.Name+"%")
@@ -38,7 +42,29 @@ func (readingService *ReadingService) GetReadingList(info businessReq.GetReading
 		return
 	}
 	err = db.Limit(limit).Offset(offset).Find(&readingList).Error
-	return readingList, total, err
+
+	for _, item := range readingList {
+		file := item.File
+		//把json 转为切片
+		var fileList []businessReq.CertFile
+		_ = json.Unmarshal([]byte(file), &fileList)
+		readingResList = append(readingResList, businessRes.ReadingResponse{
+			ID:       item.ID,
+			Name:     item.Name,
+			Mobile:   item.Mobile,
+			IdCard:   item.IdCard,
+			Number:   item.Number,
+			Group:    item.Group,
+			File:     fileList,
+			Referrer: item.Referrer,
+			Profile:  item.Profile,
+			Remark:   item.Remark,
+			Status:   item.Status,
+		})
+
+	}
+
+	return readingResList, total, err
 }
 
 func (readingService *ReadingService) AddReading(cr business.CertReading) (reading business.CertReading, err error) {
