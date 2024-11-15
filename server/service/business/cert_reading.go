@@ -57,16 +57,13 @@ func (readingService *ReadingService) EditReading(req business.CertReading) erro
 		Where("id=?", req.ID).
 		Updates(map[string]interface{}{
 			"updated_at": time.Now(),
-			//"name":       req.Name,
-			//"number":     req.Number,
-			"mobile":  req.Mobile,
-			"id_card": req.IdCard,
-			//"file":       req.File,
-			"group":    req.Group,
-			"referrer": req.Referrer,
-			"profile":  req.Profile,
-			"status":   req.Status,
-			"remark":   req.Remark,
+			"mobile":     req.Mobile,
+			"id_card":    req.IdCard,
+			"group":      req.Group,
+			"referrer":   req.Referrer,
+			"profile":    req.Profile,
+			"status":     req.Status,
+			"remark":     req.Remark,
 		}).Error
 }
 
@@ -78,6 +75,5 @@ func (readingService *ReadingService) DeleteReading(id uint) (err error) {
 		Updates(map[string]interface{}{
 			"updated_at": time.Now(),
 			"deleted_at": time.Now(),
-			//"is_deleted": 1,
 		}).Error
 }

@@ -1,7 +1,6 @@
 package business
 
 import (
-	"fmt"
 	"github.com/giles-wong/zhongx-gva/server/global"
 	"github.com/giles-wong/zhongx-gva/server/model/business"
 	businessReq "github.com/giles-wong/zhongx-gva/server/model/business/request"
@@ -100,8 +99,6 @@ func (cr *CertReadingApi) EditReading(c *gin.Context) {
 		File:     r.File,
 		Group:    r.Group,
 	}
-
-	fmt.Println(reading)
 
 	err = readingService.EditReading(*reading)
 	if err != nil {
