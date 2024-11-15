@@ -273,7 +273,7 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref, nextTick} from "vue";
 import {getReadingList, createReading, editReading, deleteReading} from "@/api/certificate";
 import CustomPic from "@/components/customPic/index.vue";
 import SelectImage from "@/components/selectImage/selectImage.vue";
@@ -351,7 +351,7 @@ const closeAddReadingDialog = () => {
   readingForm.value.resetFields()
   readingInfo.value.file = []
   readingInfo.value = {}
-  addReadingDialog.value = false
+  addReadingDialog.value = false // 关闭弹窗
 }
 
 const readingForm = ref(null)
@@ -418,18 +418,48 @@ const rules = ref({
   ]
 })
 
-const download = (row) => {
-  const baseUrl = import.meta.env.VITE_BASE_PATH + ":" + import.meta.env.VITE_CLI_PORT + import.meta.env.VITE_BASE_API + '/';
+const download = async (row) => {
+  try {
+    const baseUrl = import.meta.env.VITE_BASE_PATH + ":" + import.meta.env.VITE_CLI_PORT + import.meta.env.VITE_BASE_API + '/';
+    const fileUrl = baseUrl + row.file[0].url;
 
-  const fileUrl = baseUrl + row.file[0].url
-  // 创建一个 <a> 标签，模拟点击下载
-  const link = document.createElement('a');
-  link.href = fileUrl;
-  link.download = row.number || '证书'; // 设置下载的文件名，使用证书编号或者其他名称
-  document.body.appendChild(link); // 将 link 标签添加到 DOM 中
-  link.click(); // 模拟点击
-  document.body.removeChild(link); // 下载后移除 <a> 标签
+    // 获取文件的二进制数据
+    const response = await fetch(fileUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch file');
+    }
+
+    const blob = await response.blob(); // 将响应转为 Blob
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob); // 将 Blob 转为一个 URL
+
+    // 设置下载文件名
+    link.href = url;
+    link.download = row.number + '-' + row.name || '证书'; // 设置默认下载文件名
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // 释放掉 Blob URL
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Download failed:', error);
+  }
 }
+
+
+// const download = (row) => {
+//   const baseUrl = import.meta.env.VITE_BASE_PATH + ":" + import.meta.env.VITE_CLI_PORT + import.meta.env.VITE_BASE_API + '/';
+//
+//   const fileUrl = baseUrl + row.file[0].url
+//   // 创建一个 <a> 标签，模拟点击下载
+//   const link = document.createElement('a');
+//   link.href = fileUrl;
+//   link.download = row.number || '证书'; // 设置下载的文件名，使用证书编号或者其他名称
+//   document.body.appendChild(link); // 将 link 标签添加到 DOM 中
+//   link.click(); // 模拟点击
+//   document.body.removeChild(link); // 下载后移除 <a> 标签
+// }
 
 const groupOptions = ref([
     {value: '1', label: '一年级'},

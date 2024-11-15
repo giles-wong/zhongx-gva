@@ -21,7 +21,7 @@
 
 <script setup>
 
-import { ref } from 'vue'
+import { ref} from 'vue'
 import { ElMessage } from 'element-plus'
 import { getBaseUrl } from '@/utils/format'
 
@@ -36,7 +36,7 @@ const props = defineProps({
   },
   accept: {
     type: String,
-    default: ''
+    default: '.pdf'
   },
 })
 
