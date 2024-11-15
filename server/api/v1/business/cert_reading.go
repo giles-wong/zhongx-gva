@@ -58,6 +58,7 @@ func (cr *CertReadingApi) AddReading(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+
 	// 将文件数组转换为 JSON
 	fileJSON, err := json.Marshal(r.File)
 	if err != nil {

@@ -44,10 +44,9 @@ func (readingService *ReadingService) GetReadingList(info businessReq.GetReading
 	err = db.Limit(limit).Offset(offset).Find(&readingList).Error
 
 	for _, item := range readingList {
-		file := item.File
 		//把json 转为切片
 		var fileList []businessReq.CertFile
-		_ = json.Unmarshal([]byte(file), &fileList)
+		_ = json.Unmarshal([]byte(item.File), &fileList)
 		readingResList = append(readingResList, businessRes.ReadingResponse{
 			ID:       item.ID,
 			Name:     item.Name,

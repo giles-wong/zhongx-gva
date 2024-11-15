@@ -167,12 +167,13 @@
   >
     <template #header>
       <div class="flex justify-between items-center">
-        <span class="text-lg">新增证书</span>
+        <span class="text-lg" v-if="dialogFlag === 'add'">新增证书</span>
+        <span class="text-lg" v-if="dialogFlag === 'edit'">编辑证书</span>
         <div>
           <el-button @click="closeAddReadingDialog">取 消</el-button>
           <el-button
               type="primary"
-              @click="enterAddUserDialog"
+              @click="enterAddReadingDialog"
           >确 定</el-button>
         </div>
       </div>
@@ -263,7 +264,7 @@
           label-width="80px"
           prop="file"
       >
-        <SelectImage
+        <UploadCommon
             v-model="readingInfo.file"
         />
       </el-form-item>
@@ -277,6 +278,7 @@ import {getReadingList, createReading, editReading, deleteReading} from "@/api/c
 import CustomPic from "@/components/customPic/index.vue";
 import SelectImage from "@/components/selectImage/selectImage.vue";
 import {ElMessage, ElMessageBox} from "element-plus";
+import UploadCommon from "@/components/selectFile/selectFile.vue";
 
 defineOptions({name: 'Reading'})
 
@@ -326,7 +328,7 @@ const readingInfo = ref({
   group: '',
   referrer: '',
   remark: '',
-  file: '',
+  file: [],
   profile: '',
   status: 1,
 })
@@ -339,9 +341,44 @@ const addReading = () => {
   addReadingDialog.value = true
 }
 
+const openEdit = (row) => {
+  dialogFlag.value = 'edit'
+  readingInfo.value = JSON.parse(JSON.stringify(row))
+  addReadingDialog.value = true
+}
+
 const closeAddReadingDialog = () => {
   readingForm.value.resetFields()
+  readingInfo.value.file = []
+  readingInfo.value = {}
   addReadingDialog.value = false
+}
+
+const readingForm = ref(null)
+const enterAddReadingDialog = async() => {
+  readingForm.value.validate(async valid => {
+    if (valid) {
+      const req = {
+        ...readingInfo.value
+      }
+      if (dialogFlag.value === 'add') {
+        const res = await createReading(req)
+        if (res.code === 0) {
+          ElMessage({ type: 'success', message: '创建成功' })
+          await getTableData()
+          closeAddReadingDialog()
+        }
+      }
+      if (dialogFlag.value === 'edit') {
+        const res = await editReading(req)
+        if (res.code === 0) {
+          ElMessage({ type: 'success', message: '编辑成功' })
+          await getTableData()
+          closeAddReadingDialog()
+        }
+      }
+    }
+  })
 }
 
 const deleteReadingFunc = async(row) => {
@@ -361,7 +398,7 @@ const deleteReadingFunc = async(row) => {
 const rules = ref({
   name: [
     { required: true, message: '请输入姓名', trigger: 'blur' },
-    { min: 5, message: '最低2位字符', trigger: 'blur' }
+    { min: 2, message: '最低2位字符', trigger: 'blur' }
   ],
   number: [
     { required: true, message: '请输入整数编码', trigger: 'blur' },
@@ -381,16 +418,10 @@ const rules = ref({
   ]
 })
 
-const openEdit = (row) => {
-  dialogFlag.value = 'edit'
-  readingInfo.value = JSON.parse(JSON.stringify(row))
-  addReadingDialog.value = true
-}
-
 const download = (row) => {
   const baseUrl = import.meta.env.VITE_BASE_PATH + ":" + import.meta.env.VITE_CLI_PORT + import.meta.env.VITE_BASE_API + '/';
 
-  const fileUrl = baseUrl + row.file
+  const fileUrl = baseUrl + row.file[0].url
   // 创建一个 <a> 标签，模拟点击下载
   const link = document.createElement('a');
   link.href = fileUrl;
@@ -417,38 +448,13 @@ function getGroupLabel(groupValue) {
   return group ? group.label : '未知组'; // 如果没有找到对应项，返回'未知组'
 }
 
-const readingForm = ref(null)
-const enterAddUserDialog = async() => {
-  readingForm.value.validate(async valid => {
-    if (valid) {
-      const req = {
-        ...readingInfo.value
-      }
-      if (dialogFlag.value === 'add') {
-        const res = await createReading(req)
-        if (res.code === 0) {
-          ElMessage({ type: 'success', message: '创建成功' })
-          await getTableData()
-          closeAddReadingDialog()
-        }
-      }
-      if (dialogFlag.value === 'edit') {
-        const res = await editReading(req)
-        if (res.code === 0) {
-          ElMessage({ type: 'success', message: '编辑成功' })
-          await getTableData()
-          closeAddReadingDialog()
-        }
-      }
-    }
-  })
-}
-
 // 查询
 const getTableData = async() => {
   const table = await getReadingList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
   if (table.code === 0) {
+
     tableData.value = table.data.list
+
     total.value = table.data.total
     page.value = table.data.page
     pageSize.value = table.data.pageSize
