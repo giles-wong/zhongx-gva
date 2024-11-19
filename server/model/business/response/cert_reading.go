@@ -3,15 +3,15 @@ package response
 import "github.com/giles-wong/zhongx-gva/server/model/business/request"
 
 type ReadingResponse struct {
-	ID       uint               `json:"ID" gorm:"primarykey"`
-	Name     string             `json:"name" gorm:"comment:姓名"`
-	Number   string             `json:"number" gorm:"index;comment:证书编号"`
-	IdCard   string             `json:"idCard" gorm:"comment:身份证号"`
-	Mobile   string             `json:"mobile" gorm:"comment:手机号"`
-	Profile  string             `json:"profile" gorm:"comment:头像照片"`
-	File     []request.CertFile `json:"file" gorm:"comment:证书文件"`
-	Group    string             `json:"group" gorm:"comment:所属组"`
-	Referrer string             `json:"referrer" gorm:"comment:推荐人/单位"`
-	Status   int                `json:"status" gorm:"default:1;comment:证书状态 1正常 2冻结"`
-	Remark   string             `json:"remark" gorm:"comment:备注"`
+	ID       uint               `json:"ID"`
+	Name     string             `json:"name"`
+	Number   string             `json:"number"`
+	IdCard   string             `json:"idCard"`
+	Mobile   string             `json:"mobile"`
+	Profile  string             `json:"profile"`
+	File     []request.CertFile `json:"file"`
+	Group    string             `json:"group"`
+	Referrer string             `json:"referrer"`
+	Status   int                `json:"status"`
+	Remark   string             `json:"remark"`
 }
