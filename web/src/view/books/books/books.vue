@@ -74,7 +74,7 @@
       <el-table-column
           align="left"
           label="国际书号"
-          min-width="185"
+          min-width="140"
           prop="isbn"
       />
       <el-table-column
