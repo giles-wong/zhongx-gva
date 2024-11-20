@@ -96,6 +96,7 @@ func Routers() *gin.Engine {
 		exampleRouter.InitCustomerRouter(PrivateGroup)              // 客户路由
 		exampleRouter.InitFileUploadAndDownloadRouter(PrivateGroup) // 文件上传下载功能路由
 		businessRouter.InitCertReadingRouter(PrivateGroup)          // 读书思辨证书
+		businessRouter.InitBooksRouter(PrivateGroup)                // 图书管理
 	}
 
 	//插件路由安装

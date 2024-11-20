@@ -8,13 +8,17 @@ import (
 type BooksRouter struct {
 }
 
-func (b *BooksRouter) InitBooksRouter(Router *gin.RouterGroup) (R gin.IRoutes) {
+func (b *BooksRouter) InitBooksRouter(Router *gin.RouterGroup) {
 	booksRouter := Router.Group("books").Use(middleware.OperationRecord())
-	//booksRouterWithoutRecord := Router.Group("cert")
+	booksRouterWithoutRecord := Router.Group("books")
 
 	{
-		booksRouter.POST("createBooks", booksApi.CreateBooks) // 新建Books
+		booksRouter.POST("addBook", booksApi.CreateBooks) // 新建Books
+		booksRouter.POST("editBook", booksApi.EditBooks)
 		//booksRouter.DELETE("deleteBooks", booksApi.DeleteBooks)           // 删除Books
 		//booksRouter.DELETE("deleteBooksByIds", booksApi.DeleteBooksByIds) // 批量删除Books
+	}
+	{
+		booksRouterWithoutRecord.POST("getBookList", booksApi.BookList)
 	}
 }

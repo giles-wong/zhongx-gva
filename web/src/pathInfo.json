@@ -1,5 +1,7 @@
 {
   "/src/view/about/index.vue": "About",
+  "/src/view/books/books/books.vue": "Books",
+  "/src/view/books/index.vue": "BooksIndex",
   "/src/view/certificate/index.vue": "Cert",
   "/src/view/certificate/reading/reading.vue": "Reading",
   "/src/view/dashboard/components/banner.vue": "Banner",
