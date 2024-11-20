@@ -53,10 +53,12 @@
           min-width="75"
       >
         <template #default="scope">
-          <CustomPic
-              style="margin-top:8px"
-              :pic-src="scope.row.coverImage"
-          />
+          <div class="image-container">
+            <CustomPic
+                class="image"
+                :pic-src="scope.row.coverImage"
+            />
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -219,7 +221,6 @@
   import CustomPic from "@/components/customPic/index.vue";
   import SelectImage from "@/components/selectImage/selectImage.vue";
   import {ElMessage, ElMessageBox} from "element-plus";
-  import {deleteReading} from "@/api/certificate";
 
   defineOptions({name: 'Books'})
 
@@ -391,12 +392,25 @@
   }
 
   const initPage = async() => {
-    getTableData()
+    await getTableData()
   }
 
   initPage()
 </script>
 
 <style scoped lang="scss">
+.image-container {
+  position: relative;
+  display: inline-block;
+}
 
+.image {
+  width: 100%;
+  height: auto;
+  transition: transform 0.3s ease; /* 平滑过渡效果 */
+}
+
+.image:hover {
+  transform: scale(2); /* 鼠标悬停时放大1.5倍 */
+}
 </style>
