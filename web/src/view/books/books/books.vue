@@ -411,6 +411,6 @@
 }
 
 .image:hover {
-  transform: scale(2); /* 鼠标悬停时放大1.5倍 */
+  transform: scale(1.5); /* 鼠标悬停时放大1.5倍 */
 }
 </style>
