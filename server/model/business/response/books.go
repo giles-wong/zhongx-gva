@@ -1,7 +1,7 @@
 package response
 
 type Books struct {
-	BookId          int64  `json:"bookId"`
+	BookId          string `json:"bookId"`
 	BookName        string `json:"bookName"`
 	Author          string `json:"author"`
 	Price           string `json:"price"`

@@ -11,7 +11,7 @@ type BooksList struct {
 }
 
 type Books struct {
-	BookId          int64  `json:"bookId" form:"bookId"`
+	BookId          string `json:"bookId" form:"bookId"`
 	BookName        string `json:"bookName" form:"bookName"`
 	Author          string `json:"author" form:"author"`
 	Price           string `json:"price" form:"price"`
@@ -23,4 +23,8 @@ type Books struct {
 	Category        int8   `json:"category" form:"category"`
 	Remark          string `json:"remark" form:"remark"`
 	Status          int8   `json:"status" form:"status"`
+}
+
+type BookId struct {
+	BookId string `json:"bookId" form:"bookId"`
 }

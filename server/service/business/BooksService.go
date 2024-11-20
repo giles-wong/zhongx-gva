@@ -6,7 +6,9 @@ import (
 	"github.com/giles-wong/zhongx-gva/server/model/business"
 	businessReq "github.com/giles-wong/zhongx-gva/server/model/business/request"
 	businessRes "github.com/giles-wong/zhongx-gva/server/model/business/response"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
+	"time"
 )
 
 type BooksService struct {
@@ -65,12 +67,38 @@ func (bookService *BooksService) AddBook(book business.Books) (bookRes business.
 	return book, err
 }
 
-func (bookService *BooksService) EditBook(book business.Books) (bookRes business.Books, err error) {
-	var bookR business.Books
-	if !errors.Is(global.GVA_DB.Where("isbn = ?", book.Isbn).First(&bookR).Error, gorm.ErrRecordNotFound) {
-		return bookRes, errors.New("图书已经存在")
-	}
+func (bookService *BooksService) EditBook(book business.Books) (err error) {
+	//var bookR business.Books
+	//if !errors.Is(global.GVA_DB.Where("isbn = ?", book.Isbn).First(&bookR).Error, gorm.ErrRecordNotFound) {
+	//	return bookRes, errors.New("图书已经存在")
+	//}
+	//
+	//err = global.GVA_DB.Create(&book).Error
 
-	err = global.GVA_DB.Create(&book).Error
-	return book, err
+	return global.GVA_DB.Model(&business.Books{}).
+		Where("book_id=?", book.BookId).
+		Updates(map[string]interface{}{
+			"updated_at":       time.Now(),
+			"book_name":        book.BookName,
+			"author":           book.Author,
+			"publisher":        book.Publisher,
+			"publication_date": book.PublicationDate,
+			"price":            book.Price,
+			"cover_image":      book.CoverImage,
+			"summary":          book.Summary,
+			"remark":           book.Remark,
+		}).Error
+
+	//return book, err
+}
+
+func (bookService *BooksService) DeleteBook(bookId string) (err error) {
+	global.GVA_LOG.Info("删除图书信息", zap.String("book_id", bookId))
+
+	return global.GVA_DB.Model(&business.Books{}).
+		Where("book_id=?", bookId).
+		Updates(map[string]interface{}{
+			"updated_at": time.Now(),
+			"deleted_at": time.Now(),
+		}).Error
 }

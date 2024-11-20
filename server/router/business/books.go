@@ -15,7 +15,7 @@ func (b *BooksRouter) InitBooksRouter(Router *gin.RouterGroup) {
 	{
 		booksRouter.POST("addBook", booksApi.CreateBooks) // 新建Books
 		booksRouter.POST("editBook", booksApi.EditBooks)
-		//booksRouter.DELETE("deleteBooks", booksApi.DeleteBooks)           // 删除Books
+		booksRouter.DELETE("deleteBook", booksApi.DeleteBooks) // 删除Books
 		//booksRouter.DELETE("deleteBooksByIds", booksApi.DeleteBooksByIds) // 批量删除Books
 	}
 	{

@@ -111,7 +111,7 @@
               type="primary"
               link
               icon="delete"
-              @click="deleteReadingFunc(scope.row)"
+              @click="deleteBookFunc(scope.row)"
           >删除</el-button>
           <el-button
               type="primary"
@@ -169,7 +169,7 @@
         <el-input v-model="bookInfo.bookName"/>
       </el-form-item>
       <el-form-item label="国际书号" prop="isbn">
-        <el-input v-model="bookInfo.isbn"/>
+        <el-input v-model="bookInfo.isbn" :disabled="dialogFlag === 'edit'"/>
       </el-form-item>
       <el-form-item label="定价" prop="price">
         <el-input v-model="bookInfo.price"/>
@@ -215,10 +215,11 @@
 
 <script setup>
   import {ref} from "vue";
-  import {createBook, editBook, getBooksList} from "@/api/books";
+  import {createBook, deleteBook, editBook, getBooksList} from "@/api/books";
   import CustomPic from "@/components/customPic/index.vue";
   import SelectImage from "@/components/selectImage/selectImage.vue";
-  import {ElMessage} from "element-plus";
+  import {ElMessage, ElMessageBox} from "element-plus";
+  import {deleteReading} from "@/api/certificate";
 
   defineOptions({name: 'Books'})
 
@@ -303,6 +304,20 @@
             closeAddBookDialog()
           }
         }
+      }
+    })
+  }
+
+  const deleteBookFunc = async(row) => {
+    ElMessageBox.confirm('确定要删除吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(async() => {
+      const res = await deleteBook({ bookId: row.bookId })
+      if (res.code === 0) {
+        ElMessage.success('删除成功')
+        await getTableData()
       }
     })
   }

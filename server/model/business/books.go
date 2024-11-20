@@ -7,7 +7,7 @@ import (
 
 type Books struct {
 	ID              uint           `json:"id" gorm:"primarykey"`
-	BookId          int64          `json:"book_id" gorm:"common:图书ID"`
+	BookId          string         `json:"book_id" gorm:"common:图书ID"`
 	BookName        string         `json:"book_name" gorm:"common:图书名称"`
 	Author          string         `json:"author" gorm:"common:作者"`
 	Price           string         `json:"price" gorm:"common:价格"`
